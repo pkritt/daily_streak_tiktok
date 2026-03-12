@@ -1,0 +1,17 @@
+# Session Data
+cookies.json
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
