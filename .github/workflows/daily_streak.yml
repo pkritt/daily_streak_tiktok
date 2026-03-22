@@ -2,45 +2,37 @@ name: TikTok Daily Streak Bot
 
 on:
   schedule:
-    # Run daily at 00:00 UTC (07:00 AM ICT)
+    # ตั้งเวลาให้รันทุกวัน (ตัวอย่าง: 00:00 UTC หรือ 07:00 น. เวลาไทย)
     - cron: '0 0 * * *'
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch: # ยอมให้กดรันเองมือถือได้ (Manual Run)
 
 jobs:
-  refill_fire:
+  run-bot:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        playwright install chromium --with-deps
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
 
-    - name: Decode Cookies
-      env:
-        TIKTOK_COOKIES_BASE64: ${{ secrets.TIKTOK_COOKIES }}
-      run: |
-        echo "$TIKTOK_COOKIES_BASE64" | base64 --decode > cookies.json
+      - name: Create files from secrets
+        run: |
+          # สร้างไฟล์ .env จาก GitHub Secrets
+          echo "${{ secrets.ENV_FILE }}" > .env
+          # สร้างไฟล์ cookies.json จาก GitHub Secrets
+          echo '${{ secrets.COOKIES_JSON }}' > cookies.json
 
-    - name: Run Bot
-      env:
-        FRIENDS_TO_STREAK: ${{ vars.FRIENDS_TO_STREAK }}
-        STREAK_MESSAGE: ${{ vars.STREAK_MESSAGE }}
-        CI: true
-      run: python main.py
-
-    - name: Upload Debug Screenshot
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: error-screenshot
-        path: error_screenshot.png
+      - name: Run TikTok Bot
+        run: python main.py
+        env:
+          HEADLESS: "true" # บน GitHub Actions ต้องเป็น true เสมอ

@@ -1,4 +1,13 @@
-2026/03/12-19:51:29.951 6704 Creating DB C:\Users\kritt\OneDrive\Documents\Object-oreint\daily_streak_tiktok\tiktok_user_data\Default\Local Storage\leveldb since it was missing.
-2026/03/12-19:51:29.961 6704 Reusing MANIFEST C:\Users\kritt\OneDrive\Documents\Object-oreint\daily_streak_tiktok\tiktok_user_data\Default\Local Storage\leveldb/MANIFEST-000001
-2026/03/12-19:51:59.075 6704 Level-0 table #5: started
-2026/03/12-19:51:59.080 6704 Level-0 table #5: 111725 bytes OK
+2026/03/23-00:44:12.228 4b7c Reusing MANIFEST C:\Users\kritt\OneDrive\Documents\Object-oreint\daily_streak_tiktok\tiktok_user_data\Default\Local Storage\leveldb/MANIFEST-000001
+2026/03/23-00:44:12.231 4b7c Recovering log #8
+2026/03/23-00:44:12.233 4b7c Level-0 table #10: started
+2026/03/23-00:44:12.235 4b7c Level-0 table #10: 40311 bytes OK
+2026/03/23-00:44:12.238 4b7c Delete type=0 #8
+2026/03/23-00:44:12.239 5bb8 Compacting 4@0 + 0@1 files
+2026/03/23-00:44:12.248 5bb8 Generated table #12@0: 59 keys, 221084 bytes
+2026/03/23-00:44:12.248 5bb8 Compacted 4@0 + 0@1 files => 221084 bytes
+2026/03/23-00:44:12.249 5bb8 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/23-00:44:12.250 5bb8 Delete type=2 #3
+2026/03/23-00:44:12.250 5bb8 Delete type=2 #4
+2026/03/23-00:44:12.250 5bb8 Delete type=2 #7
+2026/03/23-00:44:12.250 5bb8 Delete type=2 #10
