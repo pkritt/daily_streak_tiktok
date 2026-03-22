@@ -50,9 +50,9 @@ async def run_bot():
                     # เลื่อนหาเพื่อนแบบเน้นย้ำ
                     for attempt in range(15): 
                         # ค้นหาด้วยชื่อบางส่วน
-                        chat_selector = page.get_by_text(search_name, exact=False).filter(visible=True).first
+                        chat_selector = page.get_by_text(search_name, exact=False).locator("visible=true").first
                         
-                        if await chat_selector.is_visible():
+                        if await chat_selector.count() > 0:
                             print(f"✅ พบ '{search_name}' แล้ว กำลังคลิก...")
                             await chat_selector.click()
                             await asyncio.sleep(5) # รอหน้าแชทโหลด
