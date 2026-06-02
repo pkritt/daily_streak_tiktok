@@ -1,7 +1,13 @@
 import json
 import os
+import sys
 
-def prune_cookies(input_path="cookies.json", output_path="cookies_minified.json"):
+def prune_cookies():
+    # Get account name from argument or default
+    account_name = sys.argv[1] if len(sys.argv) > 1 else ""
+    input_path = f"cookies_{account_name}.json" if account_name else "cookies.json"
+    output_path = f"cookies_{account_name}_minified.json" if account_name else "cookies_minified.json"
+
     if not os.path.exists(input_path):
         print(f"❌ ไม่พบไฟล์ {input_path}")
         return
@@ -22,7 +28,7 @@ def prune_cookies(input_path="cookies.json", output_path="cookies_minified.json"
     original_size = os.path.getsize(input_path) / 1024
     new_size = os.path.getsize(output_path) / 1024
     
-    print(f"✨ บีบอัดเรียบร้อย!")
+    print(f"✨ บีบอัดเรียบร้อยสำหรับบัญชี: {account_name or 'Default'}")
     print(f"📉 ขนาดเดิม: {original_size:.2f} KB")
     print(f"🚀 ขนาดใหม่: {new_size:.2f} KB")
     print(f"\n✅ กรุณาคัดลอกเนื้อหาในไฟล์ '{output_path}' ไปใส่ใน GitHub Secrets แทนของเดิมครับ")

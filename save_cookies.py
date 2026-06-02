@@ -1,11 +1,28 @@
 import asyncio
-from playwright.async_api import async_playwright
+import sys
 import os
+from playwright.async_api import async_playwright
+from dotenv import load_dotenv
 
 async def save_cookies():
+    # Get account name from argument or default
+    account_name = sys.argv[1] if len(sys.argv) > 1 else ""
+    
+    # Define filenames
+    env_file = f".env.{account_name}" if account_name else ".env"
+    cookies_file = f"cookies_{account_name}.json" if account_name else "cookies.json"
+    user_data_dir = os.path.join(os.getcwd(), f"tiktok_user_data_{account_name}" if account_name else "tiktok_user_data")
+
+    # Load specific env if it exists
+    if os.path.exists(env_file):
+        print(f"📁 Loading configuration from {env_file}")
+        load_dotenv(env_file)
+    else:
+        print(f"📁 Using default .env (or no env if not found)")
+        load_dotenv()
+
     async with async_playwright() as p:
-        # ใช้โฟลเดอร์สำหรับเก็บข้อมูล Browser เพื่อให้เหมือนคนใช้งานจริง
-        user_data_dir = os.path.join(os.getcwd(), "tiktok_user_data")
+        print(f"--- เริ่มต้นการบันทึก Cookies สำหรับบัญชี: {account_name or 'Default'} ---")
         
         # สร้าง Browser แบบเปิดหน้าต่าง (Headless=False)
         context = await p.chromium.launch_persistent_context(
@@ -18,7 +35,6 @@ async def save_cookies():
         
         page = context.pages[0] if context.pages else await context.new_page()
 
-        print("--- เริ่มต้นการบันทึก Cookies ---")
         print("1. กรุณา Login TikTok ในหน้าต่างที่เปิดขึ้นมา")
         print("2. แนะนำให้ใช้ Phone/Email/Username หรือ Google หาก QR Code ไม่ทำงาน")
         
@@ -54,10 +70,10 @@ async def save_cookies():
                     pass
 
             if success:
-                print("กำลังบันทึกข้อมูล Session...")
+                print(f"กำลังบันทึกข้อมูล Session ไปที่ {cookies_file}...")
                 await asyncio.sleep(5) # รอให้ Cookie เซ็ตตัว
-                await context.storage_state(path="cookies.json")
-                print("✨ บันทึกไฟล์ cookies.json เรียบร้อยแล้ว!")
+                await context.storage_state(path=cookies_file)
+                print(f"✨ บันทึกไฟล์ {cookies_file} เรียบร้อยแล้ว!")
             else:
                 print("❌ หมดเวลาการ Login (Timeout)")
 
