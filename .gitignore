@@ -1,6 +1,10 @@
 # Session Data
-cookies.json
-.env
+cookies*.json
+.env*
+storage_state*.json
+
+# Playwright Browser Data
+tiktok_user_data*/
 
 # Python
 __pycache__/
