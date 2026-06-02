@@ -9,6 +9,12 @@ on:
 jobs:
   run-bot:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # ระบุชื่อบัญชีที่ต้องการให้รันตรงนี้ (เช่น account1, account2)
+        # คุณสามารถเปลี่ยนชื่อเหล่านี้ได้ตามต้องการ และเพิ่มชื่อใหม่เข้าไปได้
+        account: [account1, account2]
+      fail-fast: false # ถ้าบัญชีหนึ่งพัง ให้บัญชีอื่นรันต่อจนจบ
 
     steps:
       - name: Checkout code
@@ -27,12 +33,17 @@ jobs:
 
       - name: Create files from secrets
         run: |
-          # สร้างไฟล์ .env จาก GitHub Secrets
-          echo "${{ secrets.ENV_FILE }}" > .env
-          # สร้างไฟล์ cookies.json จาก GitHub Secrets
-          echo '${{ secrets.COOKIES_JSON }}' > cookies.json
+          # ตรวจสอบและสร้างไฟล์ตามชื่อบัญชีใน Matrix
+          if [ "${{ matrix.account }}" == "account1" ]; then
+            echo "${{ secrets.ACCOUNT1_ENV }}" > .env.account1
+            echo '${{ secrets.ACCOUNT1_COOKIES }}' > cookies_account1.json
+          elif [ "${{ matrix.account }}" == "account2" ]; then
+            echo "${{ secrets.ACCOUNT2_ENV }}" > .env.account2
+            echo '${{ secrets.ACCOUNT2_COOKIES }}' > cookies_account2.json
+          fi
 
       - name: Run TikTok Bot
-        run: python main.py
+        # ส่งชื่อบัญชีจาก matrix เข้าไปใน main.py
+        run: python main.py ${{ matrix.account }}
         env:
           HEADLESS: "true" # บน GitHub Actions ต้องเป็น true เสมอ
