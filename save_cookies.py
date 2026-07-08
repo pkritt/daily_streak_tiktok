@@ -4,6 +4,14 @@ import os
 from playwright.async_api import async_playwright
 from dotenv import load_dotenv
 
+# Reconfigure stdout and stderr to UTF-8 to prevent UnicodeEncodeError with emojis on Windows
+if sys.platform.startswith('win'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
+
 async def save_cookies():
     # Get account name from argument or default
     account_name = sys.argv[1] if len(sys.argv) > 1 else ""
@@ -39,7 +47,7 @@ async def save_cookies():
         print("2. แนะนำให้ใช้ Phone/Email/Username หรือ Google หาก QR Code ไม่ทำงาน")
         
         try:
-            await page.goto("https://www.tiktok.com/login", wait_until="networkidle")
+            await page.goto("https://www.tiktok.com/login", wait_until="domcontentloaded")
 
             # รายชื่อ Element ที่บอกว่า Login สำเร็จแล้ว
             selectors = [

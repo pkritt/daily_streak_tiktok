@@ -6,6 +6,14 @@ import requests
 from playwright.async_api import async_playwright
 from dotenv import load_dotenv
 
+# Reconfigure stdout and stderr to UTF-8 to prevent UnicodeEncodeError with emojis on Windows
+if sys.platform.startswith('win'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
+
 async def run_bot():
     # Get account name from argument or default
     account_name = sys.argv[1] if len(sys.argv) > 1 else ""
@@ -34,7 +42,10 @@ async def run_bot():
 
     async with async_playwright() as p:
         is_headless = os.getenv("HEADLESS", "true").lower() == "true"
-        browser = await p.chromium.launch(headless=is_headless)
+        browser = await p.chromium.launch(
+            headless=is_headless,
+            args=['--disable-blink-features=AutomationControlled']
+        )
         
         context = await browser.new_context(
             storage_state=cookies_path,
@@ -46,7 +57,7 @@ async def run_bot():
 
         print("🚀 กำลังไปที่หน้า TikTok Inbox...")
         try:
-            await page.goto("https://www.tiktok.com/messages", wait_until="networkidle", timeout=60000)
+            await page.goto("https://www.tiktok.com/messages", wait_until="domcontentloaded", timeout=60000)
             print("รอหน้า Inbox โหลด (10 วินาที)...")
             await asyncio.sleep(10)
 
